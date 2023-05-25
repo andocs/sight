@@ -1,11 +1,15 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
 
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'
+
 import Home from './pages/Home';
 import Services from './pages/Services';
 import About from './pages/About';
 import Technology from './pages/Technology';
 import Login from './pages/Login';
+import Register from './pages/Register';
 
 import Navbar from './components/navbar.component';
 
@@ -24,9 +28,11 @@ return (
         <Route path="/about" element={ <About/> } />
         <Route path="/technology" element={ <Technology/> } />
         <Route path="/login" element={ <Login/> } />
+        <Route path="/register" element={<Register/>}/>
         
       </Routes>
     </BrowserRouter>
+    <ToastContainer/>
   </div>
   );
 };
