@@ -1,25 +1,43 @@
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Link } from 'react-router-dom'
+import { NavLink, useNavigate, useLocation } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout, reset } from '../features/auth/authSlice'
 
 const navigation = [
-  { name: 'Home', href: '/', current: true },
-  { name: 'Services', href: '/services', current: false },
-  { name: 'About', href: '/about', current: false },
-  { name: 'Technology', href: '/technology', current: false },
-  { name: 'Login', href: '/login', current: false },
-]
+  { name: 'Home', href: '/' },
+  { name: 'Services', href: '/services' },
+  { name: 'About', href: '/about' },
+  { name: 'Technology', href: '/technology' },
+];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+export default function Navbar() {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const location = useLocation();
+
+  const {user} = useSelector((state) => (state.auth))
+
+  const onLogout = () => {
+    dispatch(logout())
+    dispatch(reset())    
+    navigate('/')
+  }
+
+  const updatedNavigation = user
+    ? [...navigation, { name: 'Logout', href: '/logout', onClick: onLogout }]
+    : [...navigation, { name: 'Login', href: '/login' }];
+   
   return (
     <Disclosure as="nav">
       {({ open }) => (
         <>
+        
           <div className="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-32 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -47,17 +65,22 @@ export default function Example() {
                 <div className='hidden sm:ml-6 sm:flex grow sm:place-items-center justify-center relative'>
                   <div>
                     <div className="flex space-x-4">
-                      {navigation.map((item) => (
-                        <Link to={`${item.href}`}
+                    
+                      {updatedNavigation.map((item) => (
+                        
+                        <NavLink to={`${item.href}`}
                           key={`${item.name}`}
                           className={classNames(
-                            item.current ? 'bg-sky-800 text-white' : 'text-sky-800 hover:bg-gray-400 hover:text-white',
+                            location.pathname === item.href
+                              ? 'bg-sky-800 text-white'
+                              : 'text-sky-800 hover:bg-gray-400 hover:text-white',
                             'rounded-md px-3 py-2 text-xl font-medium'
                           )}
                           aria-current={item.current ? 'page' : undefined}
+                          onClick={item.name === 'Logout' ? (e) => { e.preventDefault(); item.onClick(); } : undefined}
                         >
                           {item.name}
-                        </Link>
+                        </NavLink>
                       ))}
                     </div>
                   </div>

@@ -1,12 +1,65 @@
 import { Link } from 'react-router-dom'
+import { useState, useEffect} from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { login, reset } from '../features/auth/authSlice'
+import Spinner from '../components/spinner.component'
 
 function Login() {
 
+  const [formData, setFormData] = useState({
+    email:'',
+    password:''
+  })
+
+  const { email, password } = formData
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth) 
+
+  useEffect(() => {
+    if(isError){
+        toast.error(message)
+    }
+
+    if(isSuccess || user){
+        navigate('/')
+    }
+
+    dispatch(reset())
+
+  }, [user, isError, isSuccess, message, navigate, dispatch])
+
+  const onChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }))
+  }
+
+  const onSubmit = (e) => {
+    e.preventDefault()
+
+    const userData = {
+      email,
+      password
+    }
+
+    dispatch(login(userData))
+  }
+
+  if(isLoading){
+    return <Spinner/>
+  }
   
   return (
 
       <div className="mx-auto max-w-screen-2xl px-2 sm:px-6 lg:px-8">
 
+        <form onSubmit={onSubmit}>
         <div className='grid grid-cols-11 gap-4'>
 
           <div className='col-start-1 col-span-3 row-span-6'>
@@ -25,12 +78,12 @@ function Login() {
 
           <div className="mb-4 px-8">
             <label htmlFor="email" className="text-l text-center block w-full mb-2 text-sm font-medium text-sky-800">EMAIL ADDRESS</label>
-            <input type="text" placeholder='name@email.com' name="email" id="email" className="placeholder:underline placeholder:text-sky-800 text-center font-semibold block w-full p-4 text-sky-800 border border-sky-800 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500"/>
+            <input type="email" placeholder='name@email.com' name="email" value={email} onChange={onChange} id="email" className="placeholder:underline placeholder:text-sky-800 text-center font-semibold block w-full p-4 text-sky-800 border border-sky-800 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500"/>
           </div>
 
           <div className='px-8'>
             <label htmlFor="password" className="text-l text-center block mb-2 text-sm font-medium text-sky-800">PASSWORD</label>
-            <input type="text" placeholder='********' name="password" id="password" className="placeholder:text-sky-800 text-center font-semibold block w-full p-4 text-sky-800 border border-sky-800 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500"/>
+            <input type="password" placeholder='********' name="password" value={password} onChange={onChange} id="password" className="placeholder:text-sky-800 text-center font-semibold block w-full p-4 text-sky-800 border border-sky-800 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500"/>
           </div>
 
           
@@ -53,7 +106,7 @@ function Login() {
           </div>
 
           <div className='col-start-6 col-span-4 row-start-4 px-8'>
-            <button type="button" className="w-full font-semibold text-xl text-white bg-sky-800 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-600 rounded-lg text-base px-6 py-3.5 text-center">
+            <button type="submit" className="w-full font-semibold text-xl text-white bg-sky-800 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-600 rounded-lg text-base px-6 py-3.5 text-center">
               Sign In
             </button>
             <div className='flex mt-3 justify-between'>
@@ -79,6 +132,8 @@ function Login() {
           </div>
 
         </div>
+
+        </form>
 
       </div>
 

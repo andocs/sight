@@ -50,7 +50,8 @@ function Register() {
             const userData = {
                 username,
                 email,
-                password
+                password,
+                role: 'patient'
             }
             dispatch(register(userData))
         }
