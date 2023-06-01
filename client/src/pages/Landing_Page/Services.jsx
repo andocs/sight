@@ -1,4 +1,3 @@
-import Navbar from '../components/navbar.component';
 
 function Services() {
   return (

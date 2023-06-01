@@ -3,8 +3,8 @@ import { useState, useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { login, reset } from '../features/auth/authSlice'
-import Spinner from '../components/spinner.component'
+import { login, reset } from '../../features/auth/authSlice'
+import Spinner from '../../components/spinner.component'
 
 function Login() {
 
@@ -26,7 +26,10 @@ function Login() {
     }
 
     if(isSuccess || user){
-        navigate('/')
+        const data = localStorage.getItem('user')
+        const obj = JSON.parse(data)
+        const userRole = obj.role
+        navigate(`/${userRole}`)
     }
 
     dispatch(reset())

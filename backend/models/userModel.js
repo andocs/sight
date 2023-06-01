@@ -5,10 +5,24 @@ const userSchema = mongoose.Schema(
     fname: {
       type: String,
       required: [true, "Please add your first name!"],
+      validate: {
+        validator: function (value) {
+          return /^[a-zA-Z0-9]{2,}$/.test(value);
+        },
+        message:
+          "First name must contain at least 2 non-special and non-whitespace characters!",
+      },
     },
     lname: {
       type: String,
       required: [true, "Please add your last name!"],
+      validate: {
+        validator: function (value) {
+          return /^[a-zA-Z0-9]{2,}$/.test(value);
+        },
+        message:
+          "Last name must contain at least 2 non-special and non-whitespace characters!",
+      },
     },
     email: {
       type: String,
@@ -47,14 +61,35 @@ const userSchema = mongoose.Schema(
     address: {
       type: String,
       required: [true, "Please add your address line 1!"],
+      validate: {
+        validator: function (value) {
+          return /^[a-zA-Z0-9]{2,}$/.test(value);
+        },
+        message:
+          "Address must contain at least 2 non-special and non-whitespace characters!",
+      },
     },
     city: {
       type: String,
       required: [true, "Please add your city!"],
+      validate: {
+        validator: function (value) {
+          return /^[a-zA-Z0-9]{2,}$/.test(value);
+        },
+        message:
+          "City must contain at least 2 non-special and non-whitespace characters!",
+      },
     },
     province: {
       type: String,
       required: [true, "Please add your province!"],
+      validate: {
+        validator: function (value) {
+          return /^[a-zA-Z0-9]{2,}$/.test(value);
+        },
+        message:
+          "Province must contain at least 2 non-special and non-whitespace characters!",
+      },
     },
     postal: {
       type: String,
